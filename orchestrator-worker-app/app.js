@@ -2,12 +2,10 @@ const { parentPort } = require('worker_threads');
 
 console.log('Orchestrator initialized.')
 
-const intervalTime = 500;
-
 let workerPorts;
 
 parentPort.on('message', (value) => {
-  workerPorts = value.workerPorts.sort((a, b) => a.id > b.id);
+  workerPorts = value.workerPorts;
   workerPorts.forEach(wp => wp.port.on('message', handleResponse));
   console.log('Orchestrator started.');
   sendCommand(workerPorts[0]);
@@ -19,7 +17,7 @@ function handleResponse(status) {
   if (!nextWorker) {
     nextWorker = workerPorts[0];
   }
-  setTimeout(() => sendCommand(nextWorker), intervalTime);
+  sendCommand(nextWorker);
 }
 
 function sendCommand(worker) {
