@@ -1,5 +1,6 @@
 const { workerData, parentPort } = require('worker_threads');
 const logger = require('./logger');
+const messageBuilder = require('./message-builder');
 
 const id = workerData.id;
 
@@ -19,7 +20,7 @@ parentPort.on('message', value => {
 
 
 function sendMessage() {
-  logger.log(`Hello from worker number ${workerData.id}\r\n`);
+  logger.log(messageBuilder.buildRandomLengthGreetingMessage(id));
 }
 
 function sendResult(port) {
